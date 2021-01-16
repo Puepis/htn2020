@@ -19,6 +19,7 @@
   "homepage": "https://github.com/Puepis/htn2020#readme",
   "dependencies": {
     "@octokit/rest": "^18.0.12",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "firebase-admin": "^9.4.2"
   }
 }
