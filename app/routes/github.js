@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Octokit } = require("@octokit/rest");
+const { route } = require("./test");
 
 const octokit = new Octokit({
   auth: process.env.ACCESS_TOKEN,
@@ -32,6 +33,29 @@ router.post("/createRepo", async (req, res) => {
     res.send(createRes);
   } catch (e) {
     console.error("Create repo error: ", e);
+    res.sendStatus(401);
+  }
+});
+
+const getUser = async () => {
+  try {
+    const res = await octokit.users.getAuthenticated();
+    console.log(res);
+    return res;
+  } catch (e) {
+    console.error("couldn't get user: ", e);
+  }
+};
+
+router.post("/createFile", async (req, res) => {
+  const { owner, repo, folder } = req.body;
+  const commitMsg = "creating test file";
+  try {
+    const user = await octokit.users.getAuthenticated();
+    console.log(user);
+    res.send(user);
+  } catch (e) {
+    console.error("something went wrong: ", e);
     res.sendStatus(401);
   }
 });
