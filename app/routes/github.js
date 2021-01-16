@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const fs = require('fs');
+const fs = require("fs");
 const { Octokit } = require("@octokit/rest");
 const { route } = require("./test");
 
@@ -22,8 +22,6 @@ router.get("/listRepos", async (req, res) => {
     res.sendStatus(401);
   }
 });
-
-
 
 router.post("/createRepo", async (req, res) => {
   const name = req.query.name;
@@ -51,25 +49,25 @@ const getUser = async () => {
 };
 
 const getBase64Encoded = (path) => {
-    const buff = fs.readFileSync(path);
-    const base64Data = buff.toString('base64');
-    console.log("encoded data: \n\n", base64Data);
-    return base64Data;
-}
+  const buff = fs.readFileSync(path);
+  const base64Data = buff.toString("base64");
+  console.log("encoded data: \n\n", base64Data);
+  return base64Data;
+};
 
 router.post("/createFile", async (req, res) => {
-  const { owner, repo, path } = req.body;
+  const { repo, path } = req.body;
   const commitMsg = "creating test file";
-  const content = getBase64Encoded('sample.txt');
+  const content = getBase64Encoded("sample.txt");
   try {
     // get user info
     const user = await octokit.users.getAuthenticated();
     console.log(user);
-    const { name, email } = user.data;
+    const { login, name, email } = user.data;
 
     // create file
-    octokit.repos.createOrUpdateFileContents({
-      owner,
+    const createRes = await octokit.repos.createOrUpdateFileContents({
+      login,
       repo,
       path,
       commitMsg,
@@ -80,7 +78,7 @@ router.post("/createFile", async (req, res) => {
       email,
     });
 
-    res.send(user);
+    res.send(createRes);
   } catch (e) {
     console.error("something went wrong: ", e);
     res.sendStatus(401);
