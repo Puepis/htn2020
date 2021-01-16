@@ -21,8 +21,8 @@ router.get("/listRepos", async (req, res) => {
   }
 });
 
-router.post("/createRepo/:name", async (req, res) => {
-  const { name } = req.params;
+router.post("/createRepo", async (req, res) => {
+  const name = req.query.name;
   // create github repo
   try {
     const createRes = await octokit.repos.createForAuthenticatedUser({
