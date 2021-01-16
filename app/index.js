@@ -10,8 +10,8 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-app.use('/api/test', testRouter);
-app.use('/api/github', githubRouter);
+app.use('/test', testRouter);
+app.use('/github', githubRouter);
 
 const PORT = process.env.PORT || 8000
 app.listen(PORT, () => {
