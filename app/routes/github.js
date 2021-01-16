@@ -57,12 +57,14 @@ const getBase64Encoded = (path) => {
 
 router.post("/createFile", async (req, res) => {
   const { repo, path } = req.body;
+  console.log("repo: ", repo);
+  console.log("path : ", path);
   const commitMsg = "creating test file";
   const content = getBase64Encoded("sample.txt");
   try {
     // get user info
     const user = await octokit.users.getAuthenticated();
-    console.log(user);
+    //console.log(user);
     const { login, name, email } = user.data;
 
     // create file
