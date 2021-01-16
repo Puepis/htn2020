@@ -1,0 +1,23 @@
+{
+  "name": "htn-2020-backend",
+  "version": "1.0.0",
+  "description": "Backend for HTN project",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./app/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Puepis/htn2020.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Puepis/htn2020/issues"
+  },
+  "homepage": "https://github.com/Puepis/htn2020#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
