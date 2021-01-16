@@ -12,6 +12,6 @@ app.get("/", (req, res) => {
 app.use('/api/test', testRouter);
 
 const PORT = process.env.PORT || 8000
-app.listen(port, () => {
+app.listen(PORT, () => {
   console.log(`App started on port ${PORT}`);
 });
