@@ -4,6 +4,20 @@ const githubRouter = require("./routes/github");
 const userRouter = require("./routes/user");
 const models = require("./models/cockroach");
 const app = express();
+const cors = require("cors");
+
+const corsConfig = {
+  origin: "*",
+  allowedHeaders: [
+    "Origin",
+    "X-Requested-With",
+    "Content-Type",
+    "Accept",
+    "Authorization",
+  ],
+};
+
+app.use(cors(corsConfig));
 
 app.use(express.json());
 
