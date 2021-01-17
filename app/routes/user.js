@@ -14,13 +14,14 @@ router.post("/init", async (req, res) => {
     });
     console.log("existing", existing);
 
-    if (!existing) {
+    if (existing.rows === 0) {
       // store info in db
       const user = await models.User.create({ prompt, email, gh_token: token });
       console.log("new user: ", user);
       res.send(user);
     } else {
       // user already exists
+      console.log("user already exists");
       res.sendStatus(400);
     }
   } catch (e) {
@@ -38,8 +39,9 @@ const generatePin = () => {
 router.get("/code", async (req, res) => {
   const { prompt } = req.body;
 
-  // check prompt against db
   try {
+    // TODO: invalid prompt?
+    // check prompt against db
     const email = await models.User.findAll({
       where: {
         prompt: prompt,
@@ -51,7 +53,7 @@ router.get("/code", async (req, res) => {
     // generate pin
     const pin = generatePin();
 
-    // TODO: end email
+    // TODO: send email with pin
 
     // update table
     await models.User.update(
@@ -84,9 +86,9 @@ router.post("/verify", async (req, res) => {
       },
     });
 
-    if (existing) {
+    if (existing.rows > 0) {
       // TODO: authenticate using github token
-      console.log(existing);
+      console.log(existing[0]);
     } else {
       // invalid pin
       res.sendStatus(400);
