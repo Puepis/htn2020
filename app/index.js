@@ -4,7 +4,6 @@ const githubRouter = require("./routes/github");
 const userRouter = require("./routes/user");
 const models = require("./models/cockroach");
 const app = express();
-const http = require("http");
 const socketIO = require("socket.io");
 
 const cors = require("cors");
@@ -33,6 +32,7 @@ app.use("/test", testRouter);
 app.use("/github", githubRouter);
 app.use("/user", userRouter);
 
+var io;
 const PORT = process.env.PORT || 8000;
 // Automatically create tables for the Sequelize models then start the server
 models.sequelize
@@ -42,11 +42,20 @@ models.sequelize
       console.log(`App started on port ${PORT}`);
     });
 
-    var io = socketIO(server);
+    io = socketIO(server);
 
     io.on("connection", (socket) => {
+      theSocket = socket;
       console.log("Client connected");
       socket.on("disconnect", () => console.log("Client disconnected"));
     });
   })
   .error((e) => console.error("error connecting to db: ", e));
+
+app.post("/github/initLocalRepo", async (req, res) => {
+  // hardcoded remote
+  const remote = "https://github.com/chenIsai/amazingidea.git";
+
+  // pass to local server through socket
+  io.emit('initRepo', remote);
+});
