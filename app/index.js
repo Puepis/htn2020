@@ -3,7 +3,6 @@ const testRouter = require("./routes/test");
 const githubRouter = require("./routes/github");
 const userRouter = require("./routes/user");
 const models = require("./models/cockroach");
-const 
 const app = express();
 
 app.use(express.json());
