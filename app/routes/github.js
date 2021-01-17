@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
+const models = require("../models/cockroach");
 const { generateOcto } = require("../util/github");
 
 router.get("/listRepos", async (req, res) => {
