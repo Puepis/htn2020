@@ -12,9 +12,9 @@ router.post("/init", async (req, res) => {
         prompt: prompt,
       },
     });
-    console.log("existing rows", existing.rows);
+    console.log("existing length", existing.length);
 
-    if (existing.rows === 0) {
+    if (existing.length === 0) {
       // store info in db
       const user = await models.User.create({ prompt, email, gh_token: token });
       console.log("new user: ", user);
@@ -86,7 +86,7 @@ router.post("/verify", async (req, res) => {
       },
     });
 
-    if (existing.rows > 0) {
+    if (existing.length > 0) {
       // TODO: authenticate using github token
       console.log(existing[0]);
     } else {
