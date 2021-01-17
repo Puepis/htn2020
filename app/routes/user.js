@@ -120,7 +120,7 @@ router.post("/verify", async (req, res) => {
           },
         }
       );
-      res.send(200);
+      res.send({ message: "verification success!" });
     } else {
       // invalid pin
       console.error("invalid pin");

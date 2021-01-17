@@ -4,6 +4,17 @@ const githubRouter = require("./routes/github");
 const userRouter = require("./routes/user");
 const models = require("./models/cockroach");
 const app = express();
+const WebSocket = require('ws');
+const wss = new WebSocket.Server({ port: 8080 });
+
+wss.on('connection', function connection(ws) {
+  ws.on('message', function incoming(message) {
+    console.log('received: %s', message);
+  });
+
+  ws.send('something');
+});
+
 const cors = require("cors");
 
 const corsConfig = {
