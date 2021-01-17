@@ -1,6 +1,6 @@
 const express = require("express");
 const models = require("../models/cockroach");
-const sendVerificationEmail = require("../util/email");
+const {sendVerificationEmail} = require("../util/email");
 const router = express.Router();
 
 // Initialize user info
