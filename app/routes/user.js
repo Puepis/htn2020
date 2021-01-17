@@ -1,5 +1,5 @@
 const express = require("express");
-const models = require("../models");
+const models = require("../models/cockroach");
 const router = express.Router();
 
 // Initialize user info

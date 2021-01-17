@@ -2,7 +2,7 @@ const express = require("express");
 const testRouter = require("./routes/test");
 const githubRouter = require("./routes/github");
 const userRouter = require("./routes/user");
-const models = require("./models");
+const models = require("./models/cockroach");
 const app = express();
 
 app.use(express.json());
