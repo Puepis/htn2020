@@ -18,8 +18,11 @@ app.use("/user", userRouter);
 
 const PORT = process.env.PORT || 8000;
 // Automatically create tables for the Sequelize models then start the server
-models.sequelize.sync().then(() => {
-  app.listen(PORT, () => {
-    console.log(`App started on port ${PORT}`);
-  });
-});
+models.sequelize
+  .sync()
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App started on port ${PORT}`);
+    });
+  })
+  .error((e) => console.error("error connecting to db: ", e));
