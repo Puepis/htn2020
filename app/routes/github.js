@@ -1,44 +1,67 @@
 const express = require("express");
 const router = express.Router();
 const fs = require("fs");
-const { default: generateOcto } = require("../util/github");
-
-var token;
-
-router.get("/authenticate", async (req, res) => {
-  token = process.env.ACCESS_TOKEN;
-});
-
-router.get("/syncAuthToken", async (req, res) => {
-  // store token
-  res.send(200);
-});
+const { generateOcto } = require("../util/github");
 
 router.get("/listRepos", async (req, res) => {
-  const octokit = generateOcto(token);
-  // fetch repos
-  try {
-    const repos = await octokit.repos.listForAuthenticatedUser();
-    console.log(repos);
-    res.send(repos);
-  } catch (e) {
-    console.error("List repos error: ", e);
+  const { prompt } = req.query;
+
+  // check if authenticated
+  const existing = await models.User.findAll({
+    where: {
+      prompt: prompt,
+    },
+    attributes: ["authenticated", "gh_token"],
+  });
+  const { token, authenticated } = existing[0].dataValues;
+
+  if (authenticated) {
+    // fetch token
+    const octokit = generateOcto(token);
+    // fetch repos
+    try {
+      const repos = await octokit.repos.listForAuthenticatedUser();
+      console.log(repos);
+      res.send(repos);
+    } catch (e) {
+      console.error("list repos error: ", e);
+      res.sendStatus(401);
+    }
+  } else {
+    console.error("user is not authorized");
     res.sendStatus(401);
   }
 });
 
 router.post("/createRepo", async (req, res) => {
-  const name = req.query.name;
-  const octokit = generateOcto(token);
-  // create github repo
-  try {
-    const createRes = await octokit.repos.createForAuthenticatedUser({
-      name,
-    });
-    console.log(createRes);
-    res.send(createRes);
-  } catch (e) {
-    console.error("Create repo error: ", e);
+  const { prompt, name } = req.query;
+
+  // check if authenticated
+  const existing = await models.User.findAll({
+    where: {
+      prompt: prompt,
+    },
+    attributes: ["authenticated", "gh_token"],
+  });
+  const { token, authenticated } = existing[0].dataValues;
+
+  if (authenticated) {
+    // fetch token
+    const octokit = generateOcto(token);
+
+    // create github repo
+    try {
+      const createRes = await octokit.repos.createForAuthenticatedUser({
+        name,
+      });
+      console.log(createRes);
+      res.send(createRes);
+    } catch (e) {
+      console.error("Create repo error: ", e);
+      res.sendStatus(401);
+    }
+  } else {
+    console.error("user is not authorized");
     res.sendStatus(401);
   }
 });

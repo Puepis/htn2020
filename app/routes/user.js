@@ -1,6 +1,6 @@
 const express = require("express");
 const models = require("../models/cockroach");
-const {sendVerificationEmail} = require("../util/email");
+const { sendVerificationEmail } = require("../util/email");
 const router = express.Router();
 
 // Initialize user info
@@ -31,6 +31,22 @@ router.post("/init", async (req, res) => {
   }
 });
 
+router.post("/cleanup", async (req, res) => {
+  const { prompt } = req.query;
+  // set authenticated to false
+  await models.User.update(
+    {
+      authenticated: false,
+    },
+    {
+      where: {
+        prompt: prompt,
+      },
+    }
+  );
+  res.json({ message: "cleaned up" });
+});
+
 const generatePin = () => {
   // generate random 5 digit num
   return Math.floor(10000 + Math.random() * 90000);
@@ -41,7 +57,6 @@ router.get("/code", async (req, res) => {
   const { prompt } = req.query;
 
   try {
-    // TODO: invalid prompt?
     // check prompt against db
     const emailRes = await models.User.findAll({
       where: {
@@ -58,6 +73,7 @@ router.get("/code", async (req, res) => {
 
     // send email with pin
     const successful = await sendVerificationEmail(email, pin);
+    console.log("email sent: ", successful);
 
     // update table
     await models.User.update(
@@ -71,7 +87,7 @@ router.get("/code", async (req, res) => {
       }
     );
     console.log("pin generated and table updated");
-    res.json({message: "verification code sent"});
+    res.json({ message: "verification code sent" });
   } catch (e) {
     console.error("error on /code", e);
     res.sendStatus(401);
@@ -91,12 +107,12 @@ router.post("/verify", async (req, res) => {
     });
 
     if (existing.length > 0) {
-      console.log("verify success: ", existing[0]);
-      // TODO: authenticate using github token
+      console.log("verification success: ", existing[0]);
       // reset pin
       await models.User.update(
         {
           pin: null,
+          authenticated: 1,
         },
         {
           where: {
@@ -104,10 +120,10 @@ router.post("/verify", async (req, res) => {
           },
         }
       );
-      console.log("pin reset");
       res.send(200);
     } else {
       // invalid pin
+      console.error("invalid pin");
       res.sendStatus(400);
     }
   } catch (e) {

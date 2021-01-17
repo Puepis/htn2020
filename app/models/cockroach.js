@@ -36,6 +36,11 @@ module.exports.User = sequelize.define("users", {
   pin: {
     type: DataTypes.INTEGER,
   },
+  authenticated: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: 0,
+  },
 });
 
 module.exports.userToJSON = (user) => {
@@ -43,6 +48,7 @@ module.exports.userToJSON = (user) => {
     prompt: user.name,
     email: user.email,
     gh_token: user.gh_token,
+    authenticated: user.authenticated,
   };
 };
 
