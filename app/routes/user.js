@@ -12,7 +12,7 @@ router.post("/init", async (req, res) => {
         prompt: prompt,
       },
     });
-    console.log("existing", existing);
+    console.log("existing rows", existing.rows);
 
     if (existing.rows === 0) {
       // store info in db
