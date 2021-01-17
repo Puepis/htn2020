@@ -39,7 +39,7 @@ module.exports.User = sequelize.define("users", {
   authenticated: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
-    defaultValue: 0,
+    defaultValue: false,
   },
 });
 

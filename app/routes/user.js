@@ -112,7 +112,7 @@ router.post("/verify", async (req, res) => {
       await models.User.update(
         {
           pin: null,
-          authenticated: 1,
+          authenticated: true,
         },
         {
           where: {
