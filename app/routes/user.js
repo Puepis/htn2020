@@ -42,16 +42,18 @@ router.get("/code", async (req, res) => {
   try {
     // TODO: invalid prompt?
     // check prompt against db
-    const email = await models.User.findAll({
+    const emailRes = await models.User.findAll({
       where: {
         prompt: prompt,
       },
       attributes: ["email"],
     });
+    const { email } = emailRes[0].dataValues;
     console.log("user found with email: ", email);
 
     // generate pin
     const pin = generatePin();
+    console.log("randomly generated pin: ", pin);
 
     // TODO: send email with pin
 
@@ -87,8 +89,20 @@ router.post("/verify", async (req, res) => {
     });
 
     if (existing.length > 0) {
+      console.log("verify success: ", existing[0]);
       // TODO: authenticate using github token
-      console.log(existing[0]);
+      // reset pin
+      await models.User.update(
+        {
+          pin: null,
+        },
+        {
+          where: {
+            pin: pin,
+          },
+        }
+      );
+      console.log("pin reset");
     } else {
       // invalid pin
       res.sendStatus(400);
