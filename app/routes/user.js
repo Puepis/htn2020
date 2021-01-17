@@ -57,7 +57,7 @@ router.get("/code", async (req, res) => {
     console.log("randomly generated pin: ", pin);
 
     // send email with pin
-    //const successful = await sendVerificationEmail(email, pin);
+    const successful = await sendVerificationEmail(email, pin);
 
     // update table
     await models.User.update(
@@ -71,7 +71,7 @@ router.get("/code", async (req, res) => {
       }
     );
     console.log("pin generated and table updated");
-    res.sendStatus(200);
+    res.json({message: "verification code sent"});
   } catch (e) {
     console.error("error on /code", e);
     res.sendStatus(401);
