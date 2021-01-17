@@ -1,5 +1,6 @@
 const express = require("express");
 const models = require("../models/cockroach");
+const sendVerificationEmail = require("../util/email");
 const router = express.Router();
 
 // Initialize user info
@@ -37,7 +38,7 @@ const generatePin = () => {
 
 // Send verification pin
 router.get("/code", async (req, res) => {
-  const { prompt } = req.body;
+  const { prompt } = req.params;
 
   try {
     // TODO: invalid prompt?
@@ -55,7 +56,8 @@ router.get("/code", async (req, res) => {
     const pin = generatePin();
     console.log("randomly generated pin: ", pin);
 
-    // TODO: send email with pin
+    // send email with pin
+    //const successful = await sendVerificationEmail(email, pin);
 
     // update table
     await models.User.update(
@@ -78,7 +80,7 @@ router.get("/code", async (req, res) => {
 
 // Verify pin
 router.post("/verify", async (req, res) => {
-  const { pin } = req.body;
+  const { pin } = req.params;
 
   try {
     // find if pin exists
@@ -103,6 +105,7 @@ router.post("/verify", async (req, res) => {
         }
       );
       console.log("pin reset");
+      res.send(200);
     } else {
       // invalid pin
       res.sendStatus(400);
@@ -112,4 +115,5 @@ router.post("/verify", async (req, res) => {
     res.sendStatus(401);
   }
 });
+
 module.exports = router;
