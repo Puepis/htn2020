@@ -73,7 +73,7 @@ router.get("/code", async (req, res) => {
 });
 
 // Verify pin
-router.post("/verify", (req, res) => {
+router.post("/verify", async (req, res) => {
   const { pin } = req.body;
 
   try {
