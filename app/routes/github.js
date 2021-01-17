@@ -15,8 +15,6 @@ router.get("/listRepos", async (req, res) => {
     attributes: ["authenticated", "gh_token"],
   });
   const { gh_token: token, authenticated } = existing[0].dataValues;
-  console.log("is authenticated: ", authenticated);
-  console.log("token: ", token);
 
   if (authenticated) {
     // fetch token
@@ -46,7 +44,7 @@ router.post("/createRepo", async (req, res) => {
     },
     attributes: ["authenticated", "gh_token"],
   });
-  const { token, authenticated } = existing[0].dataValues;
+  const { gh_token: token, authenticated } = existing[0].dataValues;
 
   if (authenticated) {
     // fetch token
