@@ -14,7 +14,7 @@ router.get("/listRepos", async (req, res) => {
     },
     attributes: ["authenticated", "gh_token"],
   });
-  const { token, authenticated } = existing[0].dataValues;
+  const { gh_token: token, authenticated } = existing[0].dataValues;
   console.log("is authenticated: ", authenticated);
   console.log("token: ", token);
 
