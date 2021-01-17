@@ -7,7 +7,7 @@ router.post("/init", async (req, res) => {
   const { prompt, email, token } = req.body;
   try {
     // check if prompt exists
-    const existing = model.User.findAll({
+    const existing = models.User.findAll({
       where: {
         prompt: prompt,
       },
