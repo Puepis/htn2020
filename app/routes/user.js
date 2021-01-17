@@ -38,7 +38,7 @@ const generatePin = () => {
 
 // Send verification pin
 router.get("/code", async (req, res) => {
-  const { prompt } = req.params;
+  const { prompt } = req.query;
 
   try {
     // TODO: invalid prompt?
@@ -80,7 +80,7 @@ router.get("/code", async (req, res) => {
 
 // Verify pin
 router.post("/verify", async (req, res) => {
-  const { pin } = req.params;
+  const { pin } = req.query;
 
   try {
     // find if pin exists
