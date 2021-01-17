@@ -52,11 +52,42 @@ models.sequelize
   })
   .error((e) => console.error("error connecting to db: ", e));
 
-app.post("/github/initLocalRepo", async (req, res) => {
-  // hardcoded remote
-  const remote = "https://github.com/chenIsai/amazingidea.git";
+app.post("/createRepo", async (req, res) => {
+  const { prompt, name } = req.query;
 
-  // pass to local server through socket
-  io.emit("initRepo", remote);
-  res.send({ message: "local repo initialized" });
+  // check if authenticated
+  const existing = await models.User.findAll({
+    where: {
+      prompt: prompt,
+    },
+    attributes: ["authenticated", "gh_token"],
+  });
+  const { gh_token: token, authenticated } = existing[0].dataValues;
+
+  if (authenticated) {
+    // fetch token
+    const octokit = generateOcto(token);
+
+    // create github repo
+    try {
+      const createRes = await octokit.repos.createForAuthenticatedUser({
+        name,
+      });
+      console.log(createRes);
+
+      // hardcoded remote
+      const remote = "https://github.com/chenIsai/amazingidea.git";
+
+      // pass to local server through socket
+      io.emit("initRepo", remote);
+      res.send(createRes);
+    } catch (e) {
+      console.error("Create repo error: ", e);
+      res.sendStatus(401);
+    }
+  } else {
+    console.error("user is not authorized");
+    res.sendStatus(401);
+  }
 });
+
