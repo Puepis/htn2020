@@ -57,5 +57,6 @@ app.post("/github/initLocalRepo", async (req, res) => {
   const remote = "https://github.com/chenIsai/amazingidea.git";
 
   // pass to local server through socket
-  io.emit('initRepo', remote);
+  io.emit("initRepo", remote);
+  res.send({ message: "local repo initialized" });
 });
