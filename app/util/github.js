@@ -5,4 +5,4 @@ const generateOcto = (token) => new Octokit({
   userAgent: "HTN2020 v1.0.0",
 });
 
-export default generateOcto;
+module.exports = generateOcto;
